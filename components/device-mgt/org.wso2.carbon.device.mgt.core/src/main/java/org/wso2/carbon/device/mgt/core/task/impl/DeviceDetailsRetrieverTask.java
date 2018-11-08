@@ -44,6 +44,7 @@ public class DeviceDetailsRetrieverTask implements Task {
     public void setProperties(Map<String, String> map) {
         deviceType = map.get("DEVICE_TYPE");
     }
+    DeviceManagementProviderService deviceManagementProviderService;
 
     @Override
     public void init() {
@@ -51,7 +52,7 @@ public class DeviceDetailsRetrieverTask implements Task {
 
     @Override
     public void execute() {
-        DeviceManagementProviderService deviceManagementProviderService = DeviceManagementDataHolder.getInstance()
+        deviceManagementProviderService = DeviceManagementDataHolder.getInstance()
                 .getDeviceManagementProvider();
         OperationMonitoringTaskConfig operationMonitoringTaskConfig = deviceManagementProviderService
                 .getDeviceMonitoringConfig(deviceType);
@@ -96,7 +97,9 @@ public class DeviceDetailsRetrieverTask implements Task {
                             operationMonitoringTaskConfig);
                     //pass the configurations also from here, monitoring tasks
                     try {
-                        deviceTaskManager.addOperations();
+                        if (deviceManagementProviderService.isDeviceMonitoringEnabled(deviceType)) {
+                            deviceTaskManager.addOperations();
+                        }
                     } catch (DeviceMgtTaskException e) {
                         log.error("Error occurred while trying to add the operations to " +
                                 "device to retrieve device details.", e);

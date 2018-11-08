@@ -26,13 +26,16 @@ import java.util.Map;
 
 public class Utils {
 
-    public static Map<String, Long> getTenantedTaskOperationMap(Map<Integer, Map<String, Long>> map) {
+    public static Map<String, Long> getTenantedTaskOperationMap(Map<Integer, Map<String, Map<String, Long>>> map,
+                                                                String deviceType) {
         int tenantId = PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantId();
         if (map.containsKey(tenantId)) {
-            return map.get(tenantId);
+            return map.get(tenantId).get(deviceType);
         } else {
             Map<String, Long> mp = new HashMap<>();
-            map.put(tenantId, mp);
+            map.put(tenantId, new HashMap() {{
+                put(deviceType, mp);
+            }});
             return mp;
         }
     }
