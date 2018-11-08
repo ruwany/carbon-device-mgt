@@ -32,11 +32,11 @@ public class Utils {
         if (map.containsKey(tenantId)) {
             return map.get(tenantId).get(deviceType);
         } else {
-            Map<String, Long> mp = new HashMap<>();
-            map.put(tenantId, new HashMap() {{
-                put(deviceType, mp);
-            }});
-            return mp;
+            Map<String, Long> taskMap = new HashMap<>();
+            HashMap<String, Map<String, Long>> typeMap = new HashMap<>();
+            typeMap.put(deviceType, taskMap);
+            map.put(tenantId, typeMap);
+            return taskMap;
         }
     }
 
